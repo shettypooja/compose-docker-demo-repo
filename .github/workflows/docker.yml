@@ -1,4 +1,5 @@
-name: Docker CI/CD
+```yaml
+name: Build and Push Docker Image
 
 on:
   push:
@@ -10,17 +11,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Checkout repo
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
+      # 2. Login to Docker Hub
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      # 3. Build Docker image
       - name: Build Docker image
-        run: docker build -t shettypooja/webapp:latest .
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/my-app:latest .
 
+      # 4. Push Docker image
       - name: Push Docker image
-        run: docker push shettypooja/webapp:latest
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/my-app:latest
+```
